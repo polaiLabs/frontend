@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Wallet, CheckCircle2, Copy } from 'lucide-react';
+import { Wallet } from 'lucide-react';
 
 interface WalletModalProps {
   isOpen: boolean;

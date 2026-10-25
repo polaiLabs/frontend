@@ -6,13 +6,9 @@ import { MarketCard } from '@/components/MarketCard';
 import { TradeModal } from '@/components/TradeModal';
 import { WalletModal } from '@/components/WalletModal';
 import {
-  TrendingUp,
   Wallet,
-  Compass,
-  Award,
   Zap,
   Search,
-  CheckCircle2,
 } from 'lucide-react';
 
 export default function Home() {

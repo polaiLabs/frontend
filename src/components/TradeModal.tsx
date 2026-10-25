@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Market } from '@/lib/types';
-import { TrendingUp, Clock, DollarSign, CheckCircle2 } from 'lucide-react';
+import { TrendingUp, CheckCircle2 } from 'lucide-react';
 
 interface TradeModalProps {
   market: Market | null;

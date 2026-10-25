@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Market } from '@/lib/types';
-import { TrendingUp, Clock, DollarSign, ChevronRight } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
 interface MarketCardProps {
   market: Market;

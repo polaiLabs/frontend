@@ -1,15 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Market, INITIAL_MARKETS } from '@/lib/types';
 import { MarketCard } from '@/components/MarketCard';
 import { TradeModal } from '@/components/TradeModal';
 import { WalletModal } from '@/components/WalletModal';
+import { fetchStellarBalances, StellarBalance } from '@/lib/stellar-balance';
 import {
   Wallet,
   Zap,
   Search,
+  LogOut,
+  RefreshCw,
 } from 'lucide-react';
+
+const WALLET_STORAGE_KEY = 'polai_connected_wallet';
 
 export default function Home() {
   const [markets, setMarkets] = useState<Market[]>(INITIAL_MARKETS);
@@ -19,8 +24,65 @@ export default function Home() {
   const [isTradeOpen, setIsTradeOpen] = useState(false);
   const [isWalletOpen, setIsWalletOpen] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [balances, setBalances] = useState<StellarBalance[]>([]);
+  const [loadingBalances, setLoadingBalances] = useState<boolean>(false);
 
   const categories = ['All', 'Crypto', 'AI/Tech', 'Gaming', 'Governance'];
+
+  // Balance fetching logic
+  const loadBalances = useCallback(async (address: string) => {
+    setLoadingBalances(true);
+    try {
+      const bList = await fetchStellarBalances(address);
+      setBalances(bList);
+    } finally {
+      setLoadingBalances(false);
+    }
+  }, []);
+
+  // Restore wallet connection on client mount
+  useEffect(() => {
+    let active = true;
+    try {
+      const saved = localStorage.getItem(WALLET_STORAGE_KEY);
+      if (saved && active) {
+        // Asynchronous restore prevents synchronous cascading renders in React 19
+        queueMicrotask(() => {
+          if (active) {
+            setWalletAddress(saved);
+            loadBalances(saved);
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('LocalStorage unavailable', e);
+    }
+    return () => {
+      active = false;
+    };
+  }, [loadBalances]);
+
+  // Handle wallet connected
+  const handleWalletConnect = (address: string) => {
+    setWalletAddress(address);
+    try {
+      localStorage.setItem(WALLET_STORAGE_KEY, address);
+    } catch (e) {
+      console.warn('Failed to persist wallet', e);
+    }
+    loadBalances(address);
+  };
+
+  // Disconnect wallet
+  const handleDisconnect = () => {
+    setWalletAddress(null);
+    setBalances([]);
+    try {
+      localStorage.removeItem(WALLET_STORAGE_KEY);
+    } catch (e) {
+      console.warn('Failed to clear wallet', e);
+    }
+  };
 
   const filteredMarkets = markets.filter((m) => {
     const matchesCategory = selectedCategory === 'All' || m.category === selectedCategory;
@@ -49,7 +111,13 @@ export default function Home() {
         return m;
       })
     );
+    if (walletAddress) {
+      loadBalances(walletAddress);
+    }
   };
+
+  // Preferred displayed balance: USDC if user holds USDC, otherwise native XLM
+  const primaryBalance = balances.find((b) => b.asset === 'USDC') || balances[0] || { asset: 'XLM', balance: '0.00' };
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col font-sans">
@@ -66,15 +134,27 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             {walletAddress ? (
               <div className="flex items-center space-x-2 border border-[#262626] bg-[#0d0d0d] px-3.5 py-1.5 font-mono text-xs" style={{ borderRadius: '2px' }}>
-                <span className="h-1.5 w-1.5 bg-[#76b900]" />
+                <span className="h-1.5 w-1.5 bg-[#76b900] animate-pulse" />
                 <span className="text-[#a7a7a7]">
                   {walletAddress.slice(0, 4)}...{walletAddress.slice(-4)}
                 </span>
                 <span className="text-[#333333]">|</span>
-                <span className="text-white font-bold">250.00 USDC</span>
+                <span className="text-white font-bold flex items-center space-x-1">
+                  <span>{primaryBalance.balance} {primaryBalance.asset}</span>
+                  {loadingBalances && (
+                    <RefreshCw className="h-2.5 w-2.5 animate-spin text-[#76b900]" />
+                  )}
+                </span>
+                <button
+                  onClick={handleDisconnect}
+                  title="Disconnect wallet"
+                  className="ml-2 text-[#757575] hover:text-[#e52020] transition-colors"
+                >
+                  <LogOut className="h-3 w-3" />
+                </button>
               </div>
             ) : (
               <button
@@ -191,7 +271,7 @@ export default function Home() {
           <div>
             <div className="font-bold text-white uppercase tracking-wider mb-3">Architecture</div>
             <p className="text-[11px] leading-relaxed text-[#757575]">
-              Engineered according to the NVIDIA Design System. Built with 2px precision radius, high-contrast monospace typography, and zero extraneous chrome.
+              Engineered according to the NVIDIA Design System. Built with 2px precision radius, high-contrast monospace typography, and live on-chain balances.
             </p>
           </div>
         </div>
@@ -208,13 +288,14 @@ export default function Home() {
         isOpen={isTradeOpen}
         onClose={() => setIsTradeOpen(false)}
         walletAddress={walletAddress}
+        userBalance={primaryBalance}
         onTradeSuccess={handleTradeSuccess}
       />
 
       <WalletModal
         isOpen={isWalletOpen}
         onClose={() => setIsWalletOpen(false)}
-        onConnect={(addr) => setWalletAddress(addr)}
+        onConnect={handleWalletConnect}
       />
     </div>
   );

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Market } from '@/lib/types';
+import { StellarBalance } from '@/lib/stellar-balance';
 import { TrendingUp, CheckCircle2 } from 'lucide-react';
 
 interface TradeModalProps {
@@ -9,6 +10,7 @@ interface TradeModalProps {
   isOpen: boolean;
   onClose: () => void;
   walletAddress: string | null;
+  userBalance?: StellarBalance;
   onTradeSuccess: (marketId: number, outcome: 'YES' | 'NO', amount: number) => void;
 }
 
@@ -17,10 +19,11 @@ export const TradeModal: React.FC<TradeModalProps> = ({
   isOpen,
   onClose,
   walletAddress,
+  userBalance = { asset: 'USDC', balance: '0.00' },
   onTradeSuccess,
 }) => {
   const [outcome, setOutcome] = useState<'YES' | 'NO'>('YES');
-  const [amount, setAmount] = useState<string>('50');
+  const [amount, setAmount] = useState<string>('25');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -116,8 +119,8 @@ export const TradeModal: React.FC<TradeModalProps> = ({
         {/* Amount Input */}
         <div className="mt-5">
           <div className="flex items-center justify-between text-xs font-mono text-[#898989] mb-1.5">
-            <span className="uppercase tracking-wider">Amount (USDC)</span>
-            <span>AVAILABLE: 250.00 USDC</span>
+            <span className="uppercase tracking-wider">Stake Amount</span>
+            <span>AVAILABLE: {userBalance.balance} {userBalance.asset}</span>
           </div>
           <div className="relative">
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-[#757575]">$</span>
@@ -130,7 +133,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({
               placeholder="0.00"
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex space-x-1">
-              {['25', '50', '100'].map((preset) => (
+              {['10', '25', '100'].map((preset) => (
                 <button
                   key={preset}
                   type="button"

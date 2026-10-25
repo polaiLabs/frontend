@@ -20,7 +20,7 @@ export const TradeModal: React.FC<TradeModalProps> = ({
   onTradeSuccess,
 }) => {
   const [outcome, setOutcome] = useState<'YES' | 'NO'>('YES');
-  const [amount, setAmount] = useState<string>('25');
+  const [amount, setAmount] = useState<string>('50');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -52,27 +52,30 @@ export const TradeModal: React.FC<TradeModalProps> = ({
         setSuccess(false);
         onClose();
       }, 1200);
-    }, 900);
+    }, 800);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-lg border border-[#262626] bg-[#0d0d0d] p-6 text-white shadow-2xl" style={{ borderRadius: '2px' }}>
+        {/* NVIDIA Corner Square */}
+        <div className="nv-corner-square" />
+
+        <div className="flex items-center justify-between pb-4 border-b border-[#262626]">
           <div className="flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5 text-emerald-400" />
-            <h3 className="text-lg font-semibold text-slate-100">Place Prediction</h3>
+            <TrendingUp className="h-4 w-4 text-[#76b900]" />
+            <h3 className="text-sm font-bold tracking-wider uppercase text-white">Execute Prediction Order</h3>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1 text-slate-400 hover:text-slate-100">
+          <button onClick={onClose} className="text-[#757575] hover:text-white text-sm">
             ✕
           </button>
         </div>
 
         <div className="mt-4">
-          <span className="inline-block rounded-md bg-slate-800 px-2.5 py-0.5 text-xs font-medium text-slate-300">
+          <span className="text-[11px] font-mono font-bold uppercase text-[#76b900] tracking-widest">
             {market.category}
           </span>
-          <h4 className="mt-2 text-base font-medium text-slate-100 leading-snug">
+          <h4 className="mt-1 text-base font-bold text-white leading-tight">
             {market.title}
           </h4>
         </div>
@@ -82,54 +85,58 @@ export const TradeModal: React.FC<TradeModalProps> = ({
           <button
             type="button"
             onClick={() => setOutcome('YES')}
-            className={`flex flex-col items-center justify-center rounded-xl border p-3.5 transition-all ${
+            className={`flex flex-col items-center justify-center p-4 transition-all border ${
               outcome === 'YES'
-                ? 'border-emerald-500 bg-emerald-950/40 text-emerald-400 shadow-lg shadow-emerald-950/30'
-                : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700'
+                ? 'border-[#76b900] bg-[#1a2800] text-[#76b900]'
+                : 'border-[#262626] bg-[#000000] text-[#898989] hover:border-[#404040]'
             }`}
+            style={{ borderRadius: '2px' }}
           >
-            <span className="text-xs font-semibold tracking-wider">BUY YES</span>
-            <span className="text-xl font-bold font-mono mt-1">${(yesPrice).toFixed(2)}</span>
-            <span className="text-[11px] text-slate-500 mt-0.5">({(yesPrice * 100).toFixed(0)}% probability)</span>
+            <span className="text-xs font-bold uppercase tracking-wider">BUY YES</span>
+            <span className="text-xl font-bold font-mono mt-1 text-white">${yesPrice.toFixed(2)}</span>
+            <span className="text-[11px] font-mono text-[#898989] mt-0.5">{(yesPrice * 100).toFixed(0)}% Probability</span>
           </button>
 
           <button
             type="button"
             onClick={() => setOutcome('NO')}
-            className={`flex flex-col items-center justify-center rounded-xl border p-3.5 transition-all ${
+            className={`flex flex-col items-center justify-center p-4 transition-all border ${
               outcome === 'NO'
-                ? 'border-rose-500 bg-rose-950/40 text-rose-400 shadow-lg shadow-rose-950/30'
-                : 'border-slate-800 bg-slate-950/40 text-slate-400 hover:border-slate-700'
+                ? 'border-[#76b900] bg-[#1a2800] text-[#76b900]'
+                : 'border-[#262626] bg-[#000000] text-[#898989] hover:border-[#404040]'
             }`}
+            style={{ borderRadius: '2px' }}
           >
-            <span className="text-xs font-semibold tracking-wider">BUY NO</span>
-            <span className="text-xl font-bold font-mono mt-1">${(noPrice).toFixed(2)}</span>
-            <span className="text-[11px] text-slate-500 mt-0.5">({(noPrice * 100).toFixed(0)}% probability)</span>
+            <span className="text-xs font-bold uppercase tracking-wider">BUY NO</span>
+            <span className="text-xl font-bold font-mono mt-1 text-white">${noPrice.toFixed(2)}</span>
+            <span className="text-[11px] font-mono text-[#898989] mt-0.5">{(noPrice * 100).toFixed(0)}% Probability</span>
           </button>
         </div>
 
         {/* Amount Input */}
         <div className="mt-5">
-          <div className="flex items-center justify-between text-xs text-slate-400 mb-1.5">
-            <span>Prediction Amount (USDC)</span>
-            <span>Balance: 250.00 USDC</span>
+          <div className="flex items-center justify-between text-xs font-mono text-[#898989] mb-1.5">
+            <span className="uppercase tracking-wider">Amount (USDC)</span>
+            <span>AVAILABLE: 250.00 USDC</span>
           </div>
           <div className="relative">
-            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500">$</span>
+            <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-[#757575]">$</span>
             <input
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pl-8 pr-20 text-slate-100 font-mono text-sm focus:border-sky-500 focus:outline-none"
+              className="w-full border border-[#262626] bg-black py-2.5 pl-8 pr-24 font-mono text-sm text-white focus:border-[#76b900] focus:outline-none"
+              style={{ borderRadius: '2px' }}
               placeholder="0.00"
             />
             <div className="absolute right-2 top-1/2 -translate-y-1/2 flex space-x-1">
-              {['10', '25', '100'].map((preset) => (
+              {['25', '50', '100'].map((preset) => (
                 <button
                   key={preset}
                   type="button"
                   onClick={() => setAmount(preset)}
-                  className="rounded-md bg-slate-800 px-2 py-1 text-xs text-slate-300 hover:bg-slate-700"
+                  className="bg-[#1a1a1a] px-2 py-0.5 font-mono text-xs text-[#a7a7a7] hover:bg-[#262626] hover:text-white"
+                  style={{ borderRadius: '2px' }}
                 >
                   ${preset}
                 </button>
@@ -139,41 +146,37 @@ export const TradeModal: React.FC<TradeModalProps> = ({
         </div>
 
         {/* Trade Summary */}
-        <div className="mt-5 space-y-2 rounded-xl border border-slate-800 bg-slate-950/60 p-3.5 text-xs text-slate-400">
+        <div className="mt-5 space-y-2 border border-[#262626] bg-black p-3.5 font-mono text-xs text-[#898989]" style={{ borderRadius: '2px' }}>
           <div className="flex justify-between">
-            <span>Est. Shares Received:</span>
-            <span className="font-mono text-slate-200">{estimatedShares.toFixed(2)} {outcome}</span>
+            <span>EST. CONTRACT SHARES:</span>
+            <span className="text-white">{estimatedShares.toFixed(2)} {outcome}</span>
           </div>
           <div className="flex justify-between">
-            <span>Potential Return:</span>
-            <span className="font-mono text-emerald-400 font-medium">
+            <span>PROJECTED RETURN:</span>
+            <span className="text-[#76b900] font-bold">
               ${estimatedShares.toFixed(2)} (+{numericAmount > 0 ? ((potentialProfit / numericAmount) * 100).toFixed(1) : '0'}%)
             </span>
           </div>
           <div className="flex justify-between">
-            <span>Network Fee (Stellar):</span>
-            <span className="font-mono text-slate-400">&lt; 0.00001 XLM (~$0.000001)</span>
+            <span>STELLAR PROTOCOL FEE:</span>
+            <span className="text-[#898989]">&lt; 0.00001 XLM</span>
           </div>
         </div>
 
         {/* Action Button */}
         <div className="mt-6">
           {success ? (
-            <div className="flex items-center justify-center space-x-2 rounded-xl bg-emerald-500/20 py-3 text-emerald-400 border border-emerald-500/30">
-              <CheckCircle2 className="h-5 w-5" />
-              <span className="font-semibold text-sm">Prediction Recorded on Soroban!</span>
+            <div className="flex items-center justify-center space-x-2 border border-[#76b900] bg-[#1a2800] py-3 text-[#76b900]" style={{ borderRadius: '2px' }}>
+              <CheckCircle2 className="h-4 w-4" />
+              <span className="font-bold text-xs uppercase tracking-wider">Transaction Finalized on Soroban!</span>
             </div>
           ) : (
             <button
               onClick={handleConfirm}
               disabled={loading || numericAmount <= 0}
-              className={`w-full rounded-xl py-3 text-sm font-semibold text-white transition-all ${
-                outcome === 'YES'
-                  ? 'bg-emerald-600 hover:bg-emerald-500'
-                  : 'bg-rose-600 hover:bg-rose-500'
-              } disabled:opacity-50`}
+              className="nv-btn-primary w-full py-3 text-xs tracking-wider uppercase disabled:opacity-40"
             >
-              {loading ? 'Submitting to Soroban...' : `Confirm Prediction (${outcome})`}
+              {loading ? 'Transacting on Soroban...' : `Confirm Order (${outcome})`}
             </button>
           )}
         </div>

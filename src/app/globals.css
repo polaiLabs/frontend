@@ -1,26 +1,69 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --nvidia-green: #76b900;
+  --nvidia-green-dark: #5a8d00;
+  --hairline: #333333;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-nvidia-green: var(--nvidia-green);
+  --color-nvidia-green-dark: var(--nvidia-green-dark);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #000000;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NVIDIA Engineering 2px radius and sharp rules */
+.nv-card {
+  position: relative;
+  border-radius: 2px;
+  border: 1px solid #262626;
+  background-color: #0d0d0d;
+}
+
+.nv-card:hover {
+  border-color: #76b900;
+}
+
+.nv-corner-square {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #76b900;
+}
+
+.nv-btn-primary {
+  background-color: #76b900;
+  color: #000000;
+  font-weight: 700;
+  border-radius: 2px;
+  transition: background-color 0.15s ease;
+}
+
+.nv-btn-primary:hover {
+  background-color: #5a8d00;
+}
+
+.nv-btn-outline {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid #76b900;
+  font-weight: 700;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+
+.nv-btn-outline:hover {
+  background-color: rgba(118, 185, 0, 0.15);
 }

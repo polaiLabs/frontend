@@ -17,53 +17,56 @@ export const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose, onCon
   const handleSelect = (walletName: string) => {
     setSelectedWallet(walletName);
     setTimeout(() => {
-      // Simulate connected Freighter testnet address
       const mockAddr = 'GBJ66K3G44YF5YF5Z2KFXOYYPQQ4NGB5K7D2HQZ4DLY3O5ZJRPWZPO3V';
       onConnect(mockAddr);
       onClose();
-    }, 600);
+    }, 500);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-md border border-[#262626] bg-[#0d0d0d] p-6 text-white shadow-2xl" style={{ borderRadius: '2px' }}>
+        {/* NVIDIA Corner Square */}
+        <div className="nv-corner-square" />
+
+        <div className="flex items-center justify-between pb-4 border-b border-[#262626]">
           <div className="flex items-center space-x-2">
-            <Wallet className="h-5 w-5 text-sky-400" />
-            <h3 className="text-lg font-semibold text-slate-100">Connect Stellar Wallet</h3>
+            <Wallet className="h-4 w-4 text-[#76b900]" />
+            <h3 className="text-sm font-bold tracking-wider uppercase text-white">Stellar Wallet Gateway</h3>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-slate-100 transition-colors"
+            className="text-[#757575] hover:text-white text-sm"
           >
             ✕
           </button>
         </div>
 
-        <p className="mt-3 text-sm text-slate-400">
-          Connect your favorite Stellar wallet to place decentralized predictions on Polai.
+        <p className="mt-3 text-xs text-[#a7a7a7] leading-relaxed">
+          Select an authorized Stellar hardware, browser, or vault wallet interface to sign Soroban smart contract transactions.
         </p>
 
-        <div className="mt-6 space-y-3">
+        <div className="mt-5 space-y-2">
           {[
-            { id: 'freighter', name: 'Freighter Wallet', desc: 'Recommended Stellar browser extension' },
-            { id: 'lobstr', name: 'Lobstr Vault', desc: 'Mobile & desktop signer' },
-            { id: 'xbull', name: 'xBull Wallet', desc: 'Multi-platform secure Stellar wallet' },
-            { id: 'albedo', name: 'Albedo', desc: 'Web-based keyless signer' },
+            { id: 'freighter', name: 'Freighter Wallet', desc: 'Hardware & Browser extension signer' },
+            { id: 'lobstr', name: 'Lobstr Vault', desc: 'Enterprise multi-sig & mobile signer' },
+            { id: 'xbull', name: 'xBull Wallet', desc: 'Secure desktop & web gateway' },
+            { id: 'albedo', name: 'Albedo', desc: 'Web-based zero-install signer' },
           ].map((w) => (
             <button
               key={w.id}
               onClick={() => handleSelect(w.name)}
-              className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-slate-950/60 p-3.5 text-left transition-all hover:border-sky-500/50 hover:bg-slate-800/50"
+              className="flex w-full items-center justify-between border border-[#262626] bg-black p-3.5 text-left transition-colors hover:border-[#76b900]"
+              style={{ borderRadius: '2px' }}
             >
               <div>
-                <div className="font-medium text-slate-200">{w.name}</div>
-                <div className="text-xs text-slate-500">{w.desc}</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-white">{w.name}</div>
+                <div className="text-[11px] text-[#757575] mt-0.5">{w.desc}</div>
               </div>
               {selectedWallet === w.name ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-sky-400 border-t-transparent" />
+                <div className="h-3.5 w-3.5 animate-spin border-2 border-[#76b900] border-t-transparent" />
               ) : (
-                <span className="text-xs font-mono text-sky-400">Connect →</span>
+                <span className="font-mono text-xs text-[#76b900]">CONNECT →</span>
               )}
             </button>
           ))}

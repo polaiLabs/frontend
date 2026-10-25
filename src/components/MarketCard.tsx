@@ -13,64 +13,66 @@ export const MarketCard: React.FC<MarketCardProps> = ({ market, onSelect }) => {
   const totalPool = market.total_yes_amount + market.total_no_amount;
   const yesShare = totalPool > 0 ? (market.total_yes_amount / totalPool) * 100 : 50;
   const noShare = 100 - yesShare;
-
-  const totalVolUSDC = totalPool / 10000000; // Stroop conversion
+  const totalVolUSDC = totalPool / 10000000;
 
   return (
-    <div className="flex flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/90 p-5 transition-all hover:border-slate-700 hover:shadow-xl hover:shadow-sky-950/20">
+    <div className="nv-card flex flex-col justify-between p-6 transition-all duration-150">
+      {/* NVIDIA signature corner square */}
+      <div className="nv-corner-square" />
+
       <div>
         <div className="flex items-center justify-between">
-          <span className="rounded-md bg-slate-800/80 px-2 py-0.5 text-xs font-medium text-slate-400">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-[#76b900]">
             {market.category}
           </span>
-          <div className="flex items-center space-x-1 text-xs text-slate-400">
-            <Clock className="h-3.5 w-3.5" />
-            <span>Active</span>
+          <div className="flex items-center space-x-1.5 text-xs text-[#898989]">
+            <Clock className="h-3 w-3" />
+            <span>ACTIVE RUN</span>
           </div>
         </div>
 
-        <h3 className="mt-3 text-base font-semibold text-slate-100 line-clamp-2 leading-snug">
+        <h3 className="mt-3 text-lg font-bold text-white leading-tight">
           {market.title}
         </h3>
 
-        <p className="mt-2 text-xs text-slate-400 line-clamp-2 leading-relaxed">
+        <p className="mt-2 text-sm text-[#a7a7a7] leading-relaxed line-clamp-2">
           {market.description}
         </p>
       </div>
 
-      <div className="mt-5">
-        {/* Probability Bar */}
-        <div className="flex items-center justify-between text-xs font-mono font-medium mb-1.5">
-          <span className="text-emerald-400">{yesShare.toFixed(0)}% YES</span>
-          <span className="text-rose-400">{noShare.toFixed(0)}% NO</span>
+      <div className="mt-6 border-t border-[#262626] pt-4">
+        {/* Probability Metric Bar */}
+        <div className="flex items-center justify-between text-xs font-mono font-bold mb-1.5">
+          <span className="text-[#76b900]">{yesShare.toFixed(0)}% YES</span>
+          <span className="text-[#898989]">{noShare.toFixed(0)}% NO</span>
         </div>
-        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-800 flex">
+        <div className="h-1.5 w-full bg-[#1a1a1a] flex">
           <div
-            className="h-full bg-emerald-500 transition-all duration-500"
+            className="h-full bg-[#76b900] transition-all duration-300"
             style={{ width: `${yesShare}%` }}
           />
           <div
-            className="h-full bg-rose-500 transition-all duration-500"
+            className="h-full bg-[#404040] transition-all duration-300"
             style={{ width: `${noShare}%` }}
           />
         </div>
 
-        {/* Buttons & Stats */}
-        <div className="mt-4 flex items-center justify-between border-t border-slate-800/80 pt-3.5">
-          <div className="flex items-center text-xs text-slate-400">
-            <span>Vol: ${totalVolUSDC > 0 ? (totalVolUSDC / 1000).toFixed(1) + 'k' : '0.00'}</span>
-          </div>
+        {/* Action Buttons */}
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-xs font-mono text-[#757575]">
+            VOL: ${totalVolUSDC > 0 ? (totalVolUSDC / 1000).toFixed(1) + 'K' : '0.00'}
+          </span>
 
           <div className="flex space-x-2">
             <button
               onClick={() => onSelect(market)}
-              className="rounded-lg bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-colors"
+              className="nv-btn-primary px-3.5 py-1.5 text-xs tracking-wider uppercase"
             >
               YES ${(yesShare / 100).toFixed(2)}
             </button>
             <button
               onClick={() => onSelect(market)}
-              className="rounded-lg bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-400 hover:bg-rose-500/20 transition-colors"
+              className="nv-btn-outline px-3.5 py-1.5 text-xs tracking-wider uppercase"
             >
               NO ${(noShare / 100).toFixed(2)}
             </button>
